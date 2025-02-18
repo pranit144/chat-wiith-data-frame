@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dataset Insights & Visualizations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        header {
+            background-color: #007BFF;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        header p {
+            margin-top: 10px;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        section {
+            max-width: 1200px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            color: #0056b3;
+        }
+        ul {
+            list-style: disc;
+            margin-left: 20px;
+        }
+        ul li {
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table th, table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 10px;
+            font-size: 16px;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .plot-container img {
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        footer {
+            text-align: center;
+            padding: 15px 10px;
+            background-color: #0056b3;
+            color: white;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Dataset Insights & Visualizations</h1>
+        <p>Upload your dataset to view insights and visualizations.</p>
+    </header>
+
+    <main>
+        <!-- Upload Section -->
+        <section>
+            <h2>Upload Your CSV File</h2>
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                <input type="file" name="file" accept=".csv" required>
+                <button type="submit" class="btn">Upload</button>
+            </form>
+        </section>
+
+        <!-- Insights Section -->
+        {% if dataset_info["Number of Rows"] > 0 %}
+        <section>
+            <h2>Dataset Insights</h2>
+            <p><strong>Number of Rows:</strong> {{ dataset_info["Number of Rows"] }}</p>
+            <p><strong>Number of Columns:</strong> {{ dataset_info["Number of Columns"] }}</p>
+            <p><strong>Columns:</strong> {{ dataset_info["Columns"] }}</p>
+            <h3>Numerical Summary</h3>
+            <div>{{ dataset_info["Numerical Summary"] | safe }}</div>
+            <h3>Categorical Summary</h3>
+            <div>{{ dataset_info["Categorical Summary"] | safe }}</div>
+            <h3>Missing Values</h3>
+            <pre>{{ dataset_info["Missing Values"] }}</pre>
+        </section>
+
+        <!-- Graph Insights Section -->
+        <section>
+            <h2>Graph Insights</h2>
+            <ul>
+                {% for insight in insights %}
+                <li>{{ insight }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <!-- Visualization Section -->
+        <section class="plot-container">
+            <h2>Generated Visualizations</h2>
+            {% for image in plot_images %}
+            <img src="data:image/png;base64,{{ image }}" alt="Visualization">
+            {% endfor %}
+        </section>
+        {% endif %}
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Dataset Visualizer. All rights reserved.</p>
+    </footer>
+</body>
+</html>
